@@ -1,0 +1,5 @@
+@media screen and (max-width: 900px), (max-height: 600px) {
+    go-playground {
+        font-size: 0.82em;
+    }
+}

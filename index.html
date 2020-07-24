@@ -4,20 +4,347 @@
 		<meta charset="utf-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 
-		<title>reveal.js</title>
+		<title>Exploiting Go Struct Tags</title>
 
 		<link rel="stylesheet" href="dist/reset.css">
 		<link rel="stylesheet" href="dist/reveal.css">
-		<link rel="stylesheet" href="dist/theme/black.css" id="theme">
+		<link rel="stylesheet" href="dist/theme/white.css" id="theme">
 
 		<!-- Theme used for syntax highlighted code -->
-		<link rel="stylesheet" href="plugin/highlight/monokai.css" id="highlight-theme">
+		<link rel="stylesheet" href="plugin/highlight/go-playground.css" id="highlight-theme">
 	</head>
 	<body>
 		<div class="reveal">
 			<div class="slides">
-				<section>Slide 1</section>
-				<section>Slide 2</section>
+
+				<!-- Page 1 -->
+				<section>
+				<h2>Go Struct Tag'lerini kullanmak</h2>
+				</br>
+				<p>İbrahim Serdar Açıkgöz</p>	
+				</section>
+		
+				
+				<!-- Page 2 -->
+				<section>
+				<h3>Ben</h3>
+			    </br>
+				<ul style="list-style: none; white-space: nowrap;">
+					<li>👨‍💻 Yazılım Mühendisi @ Mattermost</li>
+					<li>🤗 Açık Kaynak @ github.com/isacikgoz</li>
+					<li>🤓 Blog @ isacikgoz.me</li>
+				</ul>
+				</section>
+
+				<!-- Page 3 -->
+				<section>
+				<h3>Struct Tag Nedir?</h3>
+			    </br>
+				<ul>
+					<li>Bir veri yapısı alanına iliştirilen etiket</li>
+					<li><q>reflection</q> arayüzü ile erişilebilir</li>
+					<!--<li>Veri tipi kimliğinin bir parçasıdır</li> -->
+				</ul>
+				</section>
+
+				<!-- Page 4 -->
+				<section data-markdown data-transition="fade"><script type="text/template">
+				```golang []
+				type User struct {
+					id       int 
+					Username string
+				}
+				```
+				</script></section>
+				<section data-markdown data-transition="fade"><script type="text/template">
+					```golang [|2|3]
+					type User struct {
+						id       int    "tag"
+						Username string `tag:"login"`
+					}
+					```
+					</script></section>
+
+				<!-- Page 5 -->
+				<section data-transition="none" data-transition-speed="fast">
+				
+					<iframe style="height: 4em; width: 19.5em;"
+					 data-src="https://play.golang.org/p/yjML-h7TY3R" data-preload></iframe>
+				</section>
+
+				<!-- Page 6 -->
+				<section >
+				<div data-markdown><script type="text/template">
+				```golang [2|4|6|12]
+				// checkCanonicalFieldTag checks a single struct field tag.
+				func checkCanonicalFieldTag(..., tag string, ...) {
+					...
+					if err := validateStructTag(tag); err != nil {
+						pass.Reportf(field.Pos(),
+						"struct field tag %#q not compatible with reflect.StructTag.Get: %s", tag, err)
+					}
+					...
+				}
+
+				// validateStructTag parses the struct tag and checks
+				// the canonical format, which is list of key:"value"
+				func validateStructTag(tag string) error {
+				    ...
+				}
+				```
+				</script>
+				</div>
+				</br>
+				<p style="font-size: 0.4em; text-align: right;">
+				https://github.com/golang/tools/go/analysis/passes/structtag/structtag.go
+				</p>
+				</section>
+
+				<!-- Page 7 -->
+				<section>
+					<h3>Meşru Kullanımı</h3>
+					</br>
+					<div data-markdown><script type="text/template">
+				```golang []
+				type T struct {
+					f string `key:"value"`
+				}	
+				```
+				</script>
+				</div>
+				</section>	
+
+				<!-- Page 8 -->
+				<section>
+					<h3>Yaygın Kullanım</h3>
+					<iframe style="height: 14em; width: 20em;"
+					 data-src="https://play.golang.org/p/-ski9KZT5En" data-preload></iframe>
+				</section>
+
+
+				<!-- Page 9 -->
+				<section>
+					<h3>Nasıl Çalışır?</h3>
+					<iframe style="height: 14em; width: 20em;"
+					 data-src="https://play.golang.org/p/fU2TthRuJNi" data-preload></iframe>
+				</section>
+
+				<!-- Page 10 -->
+				<section>
+				<h3>Neler yapılabilir?</h3>
+			    </br>
+				<ul style="align-items: left; display: inherit;">
+					<li>runtime</li>
+					<li>compile time</li>
+					<!--<li>Veri tipi kimliğinin bir parçasıdır</li> -->
+				</ul>
+				</section>
+
+				<!-- Page 11 -->
+				<section>
+				<h3>Runtime (reflect)</h3>
+				</br>
+				<div data-markdown><script type="text/template">
+					```golang [|1|6|8]
+					v := reflect.ValueOf(value)
+					t := v.Type()
+
+					for i := 0; i < v.NumField(); i++ {
+						field := v.Field(i)
+						tag := t.Field(i).Tag.Lookup("tag")
+						...
+						field.Set()
+					}
+					...
+					```
+					</script>
+					</div>
+				</section>
+
+				<!-- Page 12 -->
+				<section>
+				<h3>Varsayılan Değerler Atama</h3>
+				</br>
+					<iframe style="height: 13em; width: 19.5em;"
+					 data-src="https://play.golang.org/p/YwwVCikJPsp" data-preload></iframe>
+				</section>
+
+				<!-- Page 13 -->
+				<section>
+				<h3>Değer Doğrulama</h3>
+				</br>
+					<iframe style="height: 13em; width: 19.5em;"
+					 data-src="https://play.golang.org/p/0e5ASopswd4" data-preload></iframe>
+				</section>
+
+				<!-- Page 14 -->
+				<section>
+				<h3>Nasıl yani?</h3>
+				</section>
+			
+				<!-- Page 15 -->
+				<section>
+				</br>
+				<div data-markdown><script type="text/template">
+					```golang [|3|5|7]
+					var emailRegex = regexp.MustCompile(`/^\S+@\S+\.\S+$/`)
+
+					func validate(validation string, v reflect.Value) error {
+						switch validation {
+						case "email":
+							s := v.String()
+							if !emailRegex.MatchString(s) {
+								return fmt.Errorf("%s is not a valid e-mail address", s)
+							}
+					...
+					```
+					</script>
+					</div>	
+				</section>
+
+				<!-- Page 16 -->
+				<section>
+				<h3>Interpreter?</h3>
+				<div data-markdown><script type="text/template">
+					```golang
+					func validate(validation string, v reflect.Value) error {
+						...
+					}
+					```
+					</script>
+					</div>	
+				<img data-src="images/interpreter.png">
+				</section>
+
+				<!-- Page 17 -->
+				<section>
+				<h3>Interpreter?</h3>
+			    </br>
+				<ul>
+					<li>değer atama</li>
+					<li>aritmetik ifadeler ("+", "-", vb.)</li>
+					<li>mantıksal ifadeler ("&&", "||", vb.)</li>
+					<li>tanımlı fonksiyonlar</li>
+				</ul>
+				</section>
+
+				<!-- Page 18 -->
+				<section>
+				<h1>✋</h1>
+				</section>
+
+				<!-- Page 19 -->
+				<section>
+				<h3>Compile time (go/ast ...)</h3>
+				<div data-markdown><script type="text/template">
+					```golang []
+					fset := token.NewFileSet()
+					file, err := parser.ParseFile(fset, filePath, nil, parser.ParseComments)
+					if err != nil {
+						panic(err)
+					}
+
+					ast.Inspect(file, func(n ast.Node) bool {
+						tp, ok := n.(*ast.TypeSpec)
+						if ok {
+							typeName := tp.Name.Name
+							st, ok := tp.Type.(*ast.StructType)
+							if ok {
+								processStruct(st, typeName)
+							}
+						}
+						return true
+					})
+					...
+					```
+					</script>
+					</div>
+				</section>
+
+				<!-- Page 20 -->
+				<section>
+				<h3>Go vet</h3>
+				</br>
+				<div data-markdown><script type="text/template">
+				```golang []
+				type User struct {
+					ID string `check:"mutation"`
+				}	
+				```
+				</script>
+				</div>
+				</section>	
+
+				<!-- Page 21 -->
+				<section>
+				<div data-markdown><script type="text/template">
+				```golang []
+				func findAssignmentsInBlock(varname string, block *ast.BlockStmt) bool {
+					for _, a := range block.List {
+						// look for assignments
+						as, ok := a.(*ast.AssignStmt)
+						if !ok {
+							continue
+						}
+
+						// check if we are assigning something to our variable
+						// in the left hand side
+						for _, expression := range as.Lhs {
+							selector, ok := expression.(*ast.SelectorExpr)
+							if !ok { continue }
+
+							ident, ok := selector.X.(*ast.Ident)
+							if !ok { continue }
+
+							if ident.Name != varname { continue }
+							return true
+						}
+					}
+					return false
+				}
+				```
+				</script>
+				</div>
+				</section>	
+
+				<!-- Page 22 -->
+				<section>
+				<h3>Kod Üretme</h3>
+				</br>
+				<div data-markdown><script type="text/template">
+				```golang
+				type User struct {
+					id       string
+					username string `api:"login"`
+					password string `api:"password"`
+				}
+				```
+				</script>
+				</div>
+				<div style="text-align: left !important;">
+				<ul style="list-style: none;">
+					<li>go/ast</li>
+					<li>text/template</li>
+					<li>go generate</li>
+				</ul>
+				</div>
+				</section>	
+
+				<!-- Page 23 -->
+				<section>
+					<h3>Dokümantasyon</h3>
+					</br>
+						<iframe style="height: 13em; width: 19.5em;"
+						 data-src="https://play.golang.org/p/fnEEJZks2Ru" data-preload></iframe>
+					</section>
+
+				<!-- Final -->
+				<section>
+					
+				<h3>Teşekkürler!</h3>
+			
+				</section>
+
 			</div>
 		</div>
 
@@ -26,9 +353,6 @@
 		<script src="plugin/markdown/markdown.js"></script>
 		<script src="plugin/highlight/highlight.js"></script>
 		<script>
-			// More info about initialization & config:
-			// - https://revealjs.com/initialization/
-			// - https://revealjs.com/config/
 			Reveal.initialize({
 				hash: true,
 

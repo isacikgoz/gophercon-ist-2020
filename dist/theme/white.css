@@ -5,13 +5,13 @@
  */
 @import url(fonts/source-sans-pro/source-sans-pro.css);
 section.has-dark-background, section.has-dark-background h1, section.has-dark-background h2, section.has-dark-background h3, section.has-dark-background h4, section.has-dark-background h5, section.has-dark-background h6 {
-  color: #fff; }
+  color: #FFD; }
 
 /*********************************************
  * GLOBAL STYLES
  *********************************************/
 :root {
-  --background-color: #fff;
+  --background-color: #FFD;
   --main-font: Source Sans Pro, Helvetica, sans-serif;
   --main-font-size: 42px;
   --main-color: #222;
@@ -33,25 +33,25 @@ section.has-dark-background, section.has-dark-background h1, section.has-dark-ba
   --link-color: #2a76dd;
   --link-color-hover: #6ca0e8;
   --selection-background-color: #98bdef;
-  --selection-color: #fff; }
+  --selection-color: #FFD; }
 
 .reveal-viewport {
-  background: #fff;
-  background-color: #fff; }
+  background: #FFD;
+  background-color: #FFD; }
 
 .reveal {
-  font-family: "Source Sans Pro", Helvetica, sans-serif;
+  font-family: "Menlo", monospace;
   font-size: 42px;
   font-weight: normal;
   color: #222; }
 
 .reveal ::selection {
-  color: #fff;
+  color: #FFD;
   background: #98bdef;
   text-shadow: none; }
 
 .reveal ::-moz-selection {
-  color: #fff;
+  color: #FFD;
   background: #98bdef;
   text-shadow: none; }
 
@@ -70,12 +70,11 @@ section.has-dark-background, section.has-dark-background h1, section.has-dark-ba
 .reveal h5,
 .reveal h6 {
   margin: 0 0 20px 0;
-  color: #222;
-  font-family: "Source Sans Pro", Helvetica, sans-serif;
+  color: #375EAB;
+  font-family: "Menlo", monospace;;
   font-weight: 600;
   line-height: 1.2;
   letter-spacing: normal;
-  text-transform: uppercase;
   text-shadow: none;
   word-wrap: break-word; }
 
@@ -105,8 +104,9 @@ section.has-dark-background, section.has-dark-background h1, section.has-dark-ba
 .reveal img,
 .reveal video,
 .reveal iframe {
-  max-width: 95%;
-  max-height: 95%; }
+  width: 100%;
+  height: 100%;
+}
 
 .reveal strong,
 .reveal b {
@@ -174,7 +174,8 @@ section.has-dark-background, section.has-dark-background h1, section.has-dark-ba
   font-family: monospace;
   line-height: 1.2em;
   word-wrap: break-word;
-  box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.15); }
+  /*box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.15);*/
+ }
 
 .reveal code {
   font-family: monospace;
@@ -247,7 +248,7 @@ section.has-dark-background, section.has-dark-background h1, section.has-dark-ba
   border: none; }
 
 .reveal .roll span:after {
-  color: #fff;
+  color: #FFD;
   background: #1a53a1; }
 
 /*********************************************
@@ -261,25 +262,25 @@ section.has-dark-background, section.has-dark-background h1, section.has-dark-ba
   transition: all .15s linear; }
 
 .reveal a:hover .r-frame {
-  border-color: #2a76dd;
+  border-color: #375EAB;
   box-shadow: 0 0 20px rgba(0, 0, 0, 0.55); }
 
 /*********************************************
  * NAVIGATION CONTROLS
  *********************************************/
 .reveal .controls {
-  color: #2a76dd; }
+  color: #375EAB; }
 
 /*********************************************
  * PROGRESS BAR
  *********************************************/
 .reveal .progress {
   background: rgba(0, 0, 0, 0.2);
-  color: #2a76dd; }
+  color: #375EAB; }
 
 /*********************************************
  * PRINT BACKGROUND
  *********************************************/
 @media print {
   .backgrounds {
-    background-color: #fff; } }
+    background-color: #FFD; } }
