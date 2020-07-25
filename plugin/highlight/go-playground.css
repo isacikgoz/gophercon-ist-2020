@@ -28,8 +28,12 @@ Monokai style - ported by Luigi Maselli - http://grigio.org
   color: lightgray;
 }
 
+
+.hljs-symbol{
+  color: crimson;
+}
+
 .hljs-attribute,
-.hljs-symbol,
 .hljs-regexp,
 .hljs-link {
   color: black;
@@ -50,17 +54,23 @@ Monokai style - ported by Luigi Maselli - http://grigio.org
 .hljs-variable,
 .hljs-template-tag,
 .hljs-template-variable {
-  color: #ff0000;
+  color: #000000;
 }
 
-.hljs-comment,
+.hljs-comment{
+  color: grey; 
+}
+
 .hljs-quote,
 .hljs-deletion,
 .hljs-meta {
   color: black;
 }
 
-.hljs-keyword,
+.hljs-keyword {
+  color: #375EAB;
+}
+
 .hljs-selector-tag,
 .hljs-literal,
 .hljs-doctag,
